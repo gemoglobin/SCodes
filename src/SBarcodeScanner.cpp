@@ -121,7 +121,7 @@ QCamera *SBarcodeScanner::makeDefaultCamera()
     });
     auto format = supportedFormats.last();
 
-    camera->setFocusMode(QCamera::FocusModeAuto);
+    camera->setFocusMode(QCamera::FocusModeAutoNear);
     camera->setCameraFormat(format);
     return camera;
 }
