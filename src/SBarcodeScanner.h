@@ -57,6 +57,8 @@ public:
     void setForwardVideoSink(QVideoSink* sink);
 public slots:
 
+    void activate();
+
 signals:
     void cameraChanged(QCamera *);
 
@@ -100,11 +102,10 @@ private:
     void tryProcessFrame(const QVideoFrame &frame);
 
     /*!
-     * \fn void setCameraAvailable(bool available)
+     * \fn void updateCameraAvailable
      * \brief Function setting camera availability
-     * \param bool available - camera availability status
      */
-    void setCameraAvailable(bool available);
+    void updateCameraAvailable();
 };
 
 #endif // SBARCODESCANNER_H

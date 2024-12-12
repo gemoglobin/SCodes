@@ -15,7 +15,7 @@ SBarcodeScanner::SBarcodeScanner(QObject* parent)
     connect(this, &QVideoSink::videoFrameChanged, this, &SBarcodeScanner::tryProcessFrame);
 
     // Connect cameraAvaliable property. Utilise implicit conversion from pointer to bool.
-    connect(this, &SBarcodeScanner::cameraChanged, this, &SBarcodeScanner::setCameraAvailable);
+    connect(this, &SBarcodeScanner::cameraChanged, this, &SBarcodeScanner::updateCameraAvailable);
 
     
     m_decoder.moveToThread(&workerThread);
@@ -74,14 +74,21 @@ void SBarcodeScanner::tryProcessFrame(const QVideoFrame& frame)
     });
 }
 
-void SBarcodeScanner::setCameraAvailable(bool available)
+void SBarcodeScanner::updateCameraAvailable()
 {
-    if (m_cameraAvailable == available) {
-        return;
+    bool cameraAvailable = false;
+    if (m_camera.isNull() == false && m_camera->isAvailable())
+    {
+        cameraAvailable = true;
+    }
+    else {
+        cameraAvailable = false;
     }
 
-    m_cameraAvailable = available;
-    emit cameraAvailableChanged();
+    if (m_cameraAvailable != cameraAvailable) {
+        m_cameraAvailable = cameraAvailable;
+        emit cameraAvailableChanged();
+    }
 }
 
 QCamera *SBarcodeScanner::makeDefaultCamera()
@@ -156,7 +163,11 @@ void SBarcodeScanner::setCaptureRect(const QRectF& captureRect)
 
 bool SBarcodeScanner::cameraAvailable() const
 {
-    return m_cameraAvailable;
+    if (m_camera.isNull()) {
+        return false;
+    }
+
+    return m_camera->isAvailable();
 }
 
 void SBarcodeScanner::setCamera(QCamera *newCamera)
@@ -213,4 +224,9 @@ void SBarcodeScanner::setForwardVideoSink(QVideoSink *newSink)
     }
     m_forwardVideoSink = newSink;
     forwardVideoSinkChanged(m_forwardVideoSink);
+}
+
+void SBarcodeScanner::activate()
+{
+    componentComplete();
 }
