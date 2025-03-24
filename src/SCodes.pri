@@ -1,6 +1,6 @@
 QT += multimedia concurrent
 
-
+DEFINES += ZXING_READERS
 CONFIG += qmltypes
 QML_IMPORT_NAME = com.scythestudio.scodes
 QML_IMPORT_MAJOR_VERSION = 1
@@ -82,7 +82,7 @@ HEADERS += \
     $$PWD/zxing-cpp/core/src/ReedSolomonDecoder.h \
     $$PWD/zxing-cpp/core/src/ReedSolomonEncoder.h \
     $$PWD/zxing-cpp/core/src/RegressionLine.h \
-    $$PWD/zxing-cpp/core/src/Result.h \
+    $$PWD/zxing-cpp/core/src/Barcode.h \
     $$PWD/zxing-cpp/core/src/ResultPoint.h \
     $$PWD/zxing-cpp/core/src/Scope.h \
     $$PWD/zxing-cpp/core/src/StructuredAppend.h \
@@ -94,7 +94,6 @@ HEADERS += \
     $$PWD/zxing-cpp/core/src/Utf.h \
     $$PWD/zxing-cpp/core/src/WhiteRectDetector.h \
     $$PWD/zxing-cpp/core/src/ZXAlgorithms.h \
-    $$PWD/zxing-cpp/core/src/ZXBigInteger.h \
     $$PWD/zxing-cpp/core/src/ZXConfig.h \
     $$PWD/zxing-cpp/core/src/ZXNullable.h \
     $$PWD/zxing-cpp/core/src/ZXTestSupport.h \
@@ -156,6 +155,7 @@ HEADERS += \
     $$PWD/zxing-cpp/core/src/oned/ODUPCEANCommon.h \
     $$PWD/zxing-cpp/core/src/oned/ODUPCEWriter.h \
     $$PWD/zxing-cpp/core/src/oned/ODWriterHelper.h \
+    $$PWD/zxing-cpp/core/src/oned/DataBarLimitedReader.h \
     $$PWD/zxing-cpp/core/src/pdf417/PDFBarcodeMetadata.h \
     $$PWD/zxing-cpp/core/src/pdf417/PDFBarcodeValue.h \
     $$PWD/zxing-cpp/core/src/pdf417/PDFBoundingBox.h \
@@ -174,6 +174,7 @@ HEADERS += \
     $$PWD/zxing-cpp/core/src/pdf417/PDFReader.h \
     $$PWD/zxing-cpp/core/src/pdf417/PDFScanningDecoder.h \
     $$PWD/zxing-cpp/core/src/pdf417/PDFWriter.h \
+    $$PWD/zxing-cpp/core/src/pdf417/ZXBigInteger.h \
     $$PWD/zxing-cpp/core/src/qrcode/QRBitMatrixParser.h \
     $$PWD/zxing-cpp/core/src/qrcode/QRCodecMode.h \
     $$PWD/zxing-cpp/core/src/qrcode/QRDataBlock.h \
@@ -195,6 +196,7 @@ SOURCES += \
     $$PWD/SBarcodeDecoder.cpp \
     $$PWD/SBarcodeFormat.cpp \
     $$PWD/SBarcodeGenerator.cpp \
+    $$PWD/zxing-cpp/core/src/Barcode.cpp \
     $$PWD/zxing-cpp/core/src/BarcodeFormat.cpp \
     $$PWD/zxing-cpp/core/src/BinaryBitmap.cpp \
     $$PWD/zxing-cpp/core/src/BitArray.cpp \
@@ -219,14 +221,12 @@ SOURCES += \
     $$PWD/zxing-cpp/core/src/ReadBarcode.cpp \
     $$PWD/zxing-cpp/core/src/ReedSolomonDecoder.cpp \
     $$PWD/zxing-cpp/core/src/ReedSolomonEncoder.cpp \
-    $$PWD/zxing-cpp/core/src/Result.cpp \
     $$PWD/zxing-cpp/core/src/ResultPoint.cpp \
     $$PWD/zxing-cpp/core/src/TextDecoder.cpp \
     $$PWD/zxing-cpp/core/src/TextEncoder.cpp \
     $$PWD/zxing-cpp/core/src/TextUtfEncoding.cpp \
     $$PWD/zxing-cpp/core/src/Utf.cpp \
     $$PWD/zxing-cpp/core/src/WhiteRectDetector.cpp \
-    $$PWD/zxing-cpp/core/src/ZXBigInteger.cpp \
     $$PWD/zxing-cpp/core/src/aztec/AZDecoder.cpp \
     $$PWD/zxing-cpp/core/src/aztec/AZDetector.cpp \
     $$PWD/zxing-cpp/core/src/aztec/AZEncoder.cpp \
@@ -268,11 +268,11 @@ SOURCES += \
     $$PWD/zxing-cpp/core/src/oned/ODITFWriter.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODMultiUPCEANReader.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODReader.cpp \
-    $$PWD/zxing-cpp/core/src/oned/ODRowReader.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODUPCAWriter.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODUPCEANCommon.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODUPCEWriter.cpp \
     $$PWD/zxing-cpp/core/src/oned/ODWriterHelper.cpp \
+    $$PWD/zxing-cpp/core/src/oned/ODDataBarLimitedReader.cpp \
     $$PWD/zxing-cpp/core/src/pdf417/PDFBarcodeValue.cpp \
     $$PWD/zxing-cpp/core/src/pdf417/PDFBoundingBox.cpp \
     $$PWD/zxing-cpp/core/src/pdf417/PDFCodewordDecoder.cpp \
@@ -287,6 +287,7 @@ SOURCES += \
     $$PWD/zxing-cpp/core/src/pdf417/PDFReader.cpp \
     $$PWD/zxing-cpp/core/src/pdf417/PDFScanningDecoder.cpp \
     $$PWD/zxing-cpp/core/src/pdf417/PDFWriter.cpp \
+    $$PWD/zxing-cpp/core/src/pdf417/ZXBigInteger.cpp \
     $$PWD/zxing-cpp/core/src/qrcode/QRBitMatrixParser.cpp \
     $$PWD/zxing-cpp/core/src/qrcode/QRCodecMode.cpp \
     $$PWD/zxing-cpp/core/src/qrcode/QRDataBlock.cpp \
