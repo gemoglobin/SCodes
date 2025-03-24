@@ -149,6 +149,7 @@ void SBarcodeDecoder::process(const QImage& capturedImage, ZXing::BarcodeFormats
       .setFormats(formats)
       .setTryHarder(true)
       .setTryRotate(true)
+      .setTryDownscale(true)
       .setIsPure(false)
       .setBinarizer(Binarizer::LocalAverage);
 
