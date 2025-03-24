@@ -130,6 +130,11 @@ QCamera *SBarcodeScanner::makeDefaultCamera()
 
     camera->setFocusMode(QCamera::FocusModeAutoNear);
     camera->setCameraFormat(format);
+    if (camera->isExposureModeSupported(QCamera::ExposureBarcode)) {
+        qDebug() << "Barcode exposure mode is supported";
+        camera->setExposureMode(QCamera::ExposureBarcode);
+    }
+
     return camera;
 }
 
