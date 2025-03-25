@@ -221,7 +221,7 @@ QImage SBarcodeDecoder::videoFrameToImage(const QVideoFrame &videoFrame, const Q
 
     #else
     // The CPU / GPU buffer check is done internally, or so it seems
-    return videoFrame.toImage().copy(captureRect).convertToFormat(QImage::Format_ARGB32);
+    return videoFrame.toImage().convertToFormat(QImage::Format_ARGB32);
 
 
 #endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

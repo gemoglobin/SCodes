@@ -55,6 +55,7 @@ public:
     bool cameraAvailable() const;
     void setCamera(QCamera *newCamera);
     void setForwardVideoSink(QVideoSink* sink);
+
 public slots:
 
     void activate();
@@ -69,6 +70,7 @@ signals:
     void capturedChanged(const QString &captured);
     void cameraAvailableChanged();
     void errorOccured(const QString& errorString);
+
 protected:
     QCamera* makeDefaultCamera();
 private:

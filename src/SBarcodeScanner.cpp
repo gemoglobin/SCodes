@@ -1,6 +1,7 @@
 #include "SBarcodeScanner.h"
 #include <QMediaDevices>
 #include "private/debug.h"
+
 SBarcodeScanner::SBarcodeScanner(QObject* parent)
     : QVideoSink(parent)
     , m_camera(nullptr)
@@ -55,6 +56,7 @@ void SBarcodeScanner::tryProcessFrame(const QVideoFrame& frame)
     if(!m_scanning || m_frameProcessingInProgress) {
         return;
     }
+
     // Set the guard variable to not process more than 1 frame at the time
     m_frameProcessingInProgress = true;
 
@@ -69,7 +71,7 @@ void SBarcodeScanner::tryProcessFrame(const QVideoFrame& frame)
     // We can copy QVideoFrame as it's explicitly shared (just like std::shared_ptr)
     // Note the releasing the guard variable
     QMetaObject::invokeMethod(&m_decoder, [=](){
-        m_decoder.process(m_decoder.videoFrameToImage(frame, cRect),SCodes::toZXingFormat(SCodes::SBarcodeFormat::QRCode));
+        m_decoder.process(m_decoder.videoFrameToImage(frame, cRect) ,SCodes::toZXingFormat(SCodes::SBarcodeFormat::QRCode));
         m_frameProcessingInProgress = false;
     });
 }
@@ -120,16 +122,32 @@ QCamera *SBarcodeScanner::makeDefaultCamera()
         return nullptr;
     }
 
-    /// Pick best format - most pixels
-    std::sort(supportedFormats.begin(),supportedFormats.end(),[](const auto& f1, const auto& f2){
-        QSize r1 = f1.resolution();
-        QSize r2 = f2.resolution();
-        return r1.height()*r1.width() < r2.height()*r2.width();
-    });
-    auto format = supportedFormats.last();
+    QCameraFormat bestFormat;
+
+    // Ищем разрешение 1280x720
+    for (const auto &format : supportedFormats) {
+        if (format.resolution().width() == 1280 && format.resolution().height() == 720) {
+            bestFormat = format;
+            break;
+        }
+    }
+
+    // Если 720p не найден, выбираем максимальное доступное разрешение
+    if (bestFormat.isNull() && !supportedFormats.isEmpty()) {
+        bestFormat = *std::max_element(supportedFormats.begin(), supportedFormats.end(), [](const QCameraFormat &a, const QCameraFormat &b) {
+            return a.resolution().width() * a.resolution().height() < b.resolution().width() * b.resolution().height();
+        });
+    }
+
+    // Устанавливаем формат
+    if (!bestFormat.isNull()) {
+        camera->setCameraFormat(bestFormat);
+        qDebug() << "Selected resolution:" << bestFormat.resolution();
+    } else {
+        qWarning() << "No valid video formats found!";
+    }
 
     camera->setFocusMode(QCamera::FocusModeAutoNear);
-    camera->setCameraFormat(format);
     if (camera->isExposureModeSupported(QCamera::ExposureBarcode)) {
         qDebug() << "Barcode exposure mode is supported";
         camera->setExposureMode(QCamera::ExposureBarcode);
