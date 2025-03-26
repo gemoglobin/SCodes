@@ -2,6 +2,9 @@
 #include <QMediaDevices>
 #include "private/debug.h"
 
+static const int defaultResolutionWidth = 1280;
+static const int defaultResolutionHeight = 720;
+
 SBarcodeScanner::SBarcodeScanner(QObject* parent)
     : QVideoSink(parent)
     , m_camera(nullptr)
@@ -126,7 +129,7 @@ QCamera *SBarcodeScanner::makeDefaultCamera()
 
     // Ищем разрешение 1280x720
     for (const auto &format : supportedFormats) {
-        if (format.resolution().width() == 1280 && format.resolution().height() == 720) {
+        if (format.resolution().width() == defaultResolutionWidth && format.resolution().height() == defaultResolutionHeight) {
             bestFormat = format;
             break;
         }
