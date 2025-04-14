@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.15)
 
 project(SCodes LANGUAGES CXX)
 option(SCODES_DEBUG OFF)
@@ -9,6 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(ZXING_READERS ON)
 
 if (NOT DEFINED BUILD_SHARED_LIBS)
     set(BUILD_SHARED_LIBS ON)
@@ -16,21 +17,14 @@ endif()
 
 set(BUILD_UNIT_TESTS OFF)
 set(BUILD_BLACKBOX_TESTS OFF)
-set(BUILD_EXAMPLES OFF)
+set(ZXING_EXAMPLES OFF)
 add_subdirectory(zxing-cpp)
 
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Core Multimedia Concurrent Quick REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Multimedia Concurrent Quick REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Multimedia Concurrent Quick)
 
 file(GLOB SOURCE_CPP
     "*.cpp"
 )
-
-if(QT_VERSION_MAJOR EQUAL 6)
-    list(FILTER SOURCE_CPP EXCLUDE REGEX "SBarcodeFilter.cpp")
-else()
-    list(FILTER SOURCE_CPP EXCLUDE REGEX "SBarcodeScanner.cpp")
-endif()
 
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_CPP})
@@ -46,9 +40,15 @@ if(SCODES_DEBUG)
 endif()
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ZXing Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Multimedia Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Quick)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    ZXing
+    Qt::Core
+    Qt::Multimedia
+    Qt::Concurrent
+    Qt::Quick
+)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE  "${CMAKE_CURRENT_SOURCE_DIR}/private")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/private")
 
 if (ANDROID)
 
@@ -59,5 +59,5 @@ if (ANDROID)
         target_link_libraries(${PROJECT_NAME} PUBLIC Qt::CorePrivate)
     endif()
 
-    target_link_libraries(${PROJECT_NAME} PUBLIC EGL GLESv2)
+    #target_link_libraries(${PROJECT_NAME} PUBLIC EGL GLESv2)
 endif()
