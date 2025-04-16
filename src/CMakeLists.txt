@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 project(SCodes LANGUAGES CXX)
 option(SCODES_DEBUG OFF)
 
-
+set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
