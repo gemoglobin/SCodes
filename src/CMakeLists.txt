@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.15)
 project(SCodes LANGUAGES CXX)
 option(SCODES_DEBUG OFF)
 
-set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -51,7 +50,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/private")
 
 if (ANDROID)
-
+    set(CMAKE_BUILD_TYPE "MinSizeRel")
     if(QT_VERSION_MAJOR EQUAL 5)
         find_package(Qt${QT_VERSION_MAJOR} COMPONENTS AndroidExtras REQUIRED)
         target_link_libraries(${PROJECT_NAME} PUBLIC Qt${QT_VERSION_MAJOR}::AndroidExtras)
